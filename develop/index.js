@@ -21,7 +21,7 @@ inquirer
       type: "input",
       name: "textColor",
       message: "What color would you like the text to be?",
-      // validation: "#"
+      // validate: "#"
     },
     {
       type: "list",
@@ -33,7 +33,7 @@ inquirer
       type: "input",
       name: "shapeColor",
       message: "What color would you like the shape to be?",
-      // validation: "#"
+      // validate: "#"
     },
   ])
   .then((data) => {
@@ -41,3 +41,5 @@ inquirer
       console.log("thank you for your answers!");
     }
   });
+
+  
