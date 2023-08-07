@@ -1,45 +1,91 @@
 const inquirer = require("inquirer");
-const colorValidation = [];
+const fs = require("fs");
+const shapeOptions = ["Triangle", "Circle", "Square"];
 
-const countLetters = (input) => {
-  const stringLength = input.length;
-  if (stringLength != 3) {
-    return "Length must be between 1 and 3 letters.";
+function createClass(inputValues) {
+  class shapeClass {
+    constructor() {
+      this.color = inputValues.shapeColor;
+      this.shape = inputValues.shapeChoice;
+      this.textColor = inputValues.lettersColor;
+    }
   }
-  return true;
-};
+  let newShape = new shapeClass(inputValues);
+  testShape(newShape);
+}
+
+function testShape(object) {
+  if ((object.color = "")) {
+    console.log("it works!");
+  } else {
+    console.log("That's not a color");
+  }
+}
+function writeToSVGFile(inputValues, newShape) {
+  switch (inputValues.shapeChoice) {
+    case "Triangle":
+      newShape = `<polygon points="100,25 25,225 175,225" fill="${inputValues.shapeColor}" />`;
+      break;
+    case "Circle":
+      newShape = `<circle cx="100" cy="150" r="100" fill="${inputValues.shapeColor}" />`;
+      break;
+    case "Square":
+      newShape = `<rect x="50" y="100" width="100" height="100"  fill="${inputValues.shapeColor}" />`;
+      break;
+  }
+
+  let svgTemplate = `<svg width="200" height="300" xmlns="http://www.w3.org/2000/svg">
+  ${newShape}
+  <text x="100" y="150" text-anchor="middle" alignment-baseline="middle" fill="${inputValues.lettersColor}" font-size="20">
+    ${inputValues.lettersChoice}
+  </text>
+</svg>`;
+  fs.writeFile("logo.svg", `${svgTemplate}`, () => {});
+}
 
 inquirer
   .prompt([
     {
-      type: "input",
-      name: "text",
-      message: "What text would you like on the logo?",
-      validate: countLetters,
-    },
-    {
-      type: "input",
-      name: "textColor",
-      message: "What color would you like the text to be?",
-      // validate: "#"
-    },
-    {
       type: "list",
+      message: "What shape would you like to create?",
+      choices: shapeOptions,
       name: "shape",
-      message: "What shape would you like it to be?",
-      choices: ["circle", "square", "triangle"],
     },
     {
       type: "input",
+      message: "What color do you want the shape to be?",
       name: "shapeColor",
-      message: "What color would you like the shape to be?",
-      // validate: "#"
+    },
+    {
+      type: "input",
+      message:
+        "What letters would you like displayed on the shape? (Must be 3 letters exactly)",
+      name: "letters",
+      validate: testString,
+    },
+    {
+      type: "input",
+      message: "What color do you want the letters to be?",
+      name: "lettersColor",
     },
   ])
-  .then((data) => {
-    if ((data = true)) {
-      console.log("thank you for your answers!");
-    }
+  .then((input) => {
+    inputValues = {
+      shapeChoice: input.shape,
+      shapeColor: input.shapeColor,
+      lettersChoice: input.letters,
+      lettersColor: input.lettersColor,
+    };
+    createClass(inputValues);
+    writeToSVGFile(inputValues);
   });
 
-  
+function testString(lettersChoice) {
+  if (lettersChoice.length > 3 || lettersChoice.length < 3) {
+    console.log("You must input exactly 3 letters");
+  } else if (lettersChoice.length === 3) {
+    return true;
+  }
+}
+
+module.exports = testShape;
