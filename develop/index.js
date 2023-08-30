@@ -18,7 +18,6 @@ function testShape(object) {
   if ((object.color = "")) {
     console.log("it works!");
   } else {
-    console.log("That's not a color");
   }
 }
 function writeToSVGFile(inputValues, newShape) {
@@ -41,6 +40,25 @@ function writeToSVGFile(inputValues, newShape) {
   </text>
 </svg>`;
   fs.writeFile("logo.svg", `${svgTemplate}`, () => {});
+
+  function removeChars(newShape, char1, char2) {
+    return newShape
+      .split("")
+      .filter((char) => char !== char1 && char !== char2)
+      .join("");
+  }
+
+  noJSXnewShape = removeChars(newShape, "<", ">");
+
+  fs.writeFile(
+    "currentShape.js",
+    "let currentShape = " +
+      "`" +
+      `${noJSXnewShape}` +
+      "`" +
+      " \n module.exports = currentShape",
+    () => {}
+  );
 }
 
 inquirer
@@ -88,4 +106,4 @@ function testString(lettersChoice) {
   }
 }
 
-module.exports = testShape;
+module.exports = writeToSVGFile;

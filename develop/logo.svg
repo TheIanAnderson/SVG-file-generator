@@ -1,6 +1,6 @@
 <svg width="200" height="300" xmlns="http://www.w3.org/2000/svg">
-  <polygon points="100,25 25,225 175,225" fill="" />
-  <text x="100" y="150" text-anchor="middle" alignment-baseline="middle" fill="blue" font-size="20">
+  <circle cx="100" cy="150" r="100" fill="gray" />
+  <text x="100" y="150" text-anchor="middle" alignment-baseline="middle" fill="white" font-size="20">
     ian
   </text>
 </svg>
